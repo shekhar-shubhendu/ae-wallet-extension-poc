@@ -37,6 +37,8 @@ function receiveMessage(event) {
         break
     case "ae:registrationComplete":
         console.log("Registration Complete")
+        sendMessage("ae:walletDetail",
+        ["1KGVZ2AFqAybJkpdKCzP/0W4W/0BQZaDH6en8g7VstQ=", "ak_bobS3qRvWfDxCpmedQYzp3xrK5jVUS4MSto99QrCdySSMjYnd", []])
       break
     case "ae:sign":
         console.log("Sign: ", event.data)
