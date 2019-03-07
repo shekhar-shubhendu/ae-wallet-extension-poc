@@ -21,7 +21,8 @@
   "content_scripts": [
     {
       "matches": [
-        "https://*/*"
+        "https://*/*",
+        "http://*/*"
       ],
       "js": [
         "inject.bundle.js"
