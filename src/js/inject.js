@@ -25,28 +25,31 @@ function sendMessage(method, params) {
     method,
     params
   }
-  console.log("From Send Message: ", extMessage)
   window.postMessage(extMessage)
 }
 
 function receiveMessage(event) {
-  console.log("Receive Message: ", event.data)
   switch (event.data.method) {
     case "ae:sdkReady":
         sendMessage("ae:registerProvider", ["mqMprOIp1ehtxUI3IaG5IVJB9JTOT/yYBHm7rE+PJMY="])
         break
     case "ae:registrationComplete":
         console.log("Registration Complete")
-        sendMessage("ae:walletDetail",
-        ["1KGVZ2AFqAybJkpdKCzP/0W4W/0BQZaDH6en8g7VstQ=", "ak_bobS3qRvWfDxCpmedQYzp3xrK5jVUS4MSto99QrCdySSMjYnd", []])
       break
     case "ae:sign":
         console.log("Sign: ", event.data)
         mySuperSafeAccount.signTransaction(event.data.params[1]).then(signed_tx => {
-        sendMessage("ae:broadcast", ["1KGVZ2AFqAybJkpdKCzP/0W4W/0BQZaDH6en8g7VstQ=", signed_tx])
+        sendMessage("ae:broadcast", ["1KGVZ2AFqAybJkpdKCzP/0W4W/0BQZaDH6en8g7VstQ=", event.data.params[1], signed_tx])
       }).catch(error => {
         console.log(error)
       })
       break
   }
 }
+
+
+chrome.runtime.onMessage.addListener( msg => {
+    if(msg.method === "ae:walletDetail") {
+      window.postMessage(msg)
+    }
+})
