@@ -38,8 +38,8 @@ function receiveMessage(event) {
       break
     case "ae:sign":
         console.log("Sign: ", event.data)
-        mySuperSafeAccount.signTransaction(event.data.params[1]).then(signed_tx => {
-        sendMessage("ae:broadcast", ["1KGVZ2AFqAybJkpdKCzP/0W4W/0BQZaDH6en8g7VstQ=", event.data.params[1], signed_tx])
+        mySuperSafeAccount.sign(event.data.params[1]).then(signed_tx => {
+        sendMessage("ae:broadcast", ["1KGVZ2AFqAybJkpdKCzP/0W4W/0BQZaDH6en8g7VstQ=", event.data.params[2], signed_tx])
       }).catch(error => {
         console.log(error)
       })
