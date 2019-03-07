@@ -10,12 +10,12 @@ const mySuperSafeAccount = MemoryAccount({
 chrome.extension.sendMessage({}, function (response) {
   const readyStateCheckInterval = setInterval(function () {
     if (document.readyState === "complete") {
-      clearInterval(readyStateCheckInterval);
+      clearInterval(readyStateCheckInterval)
       sendMessage("ae:registerProvider", ["mqMprOIp1ehtxUI3IaG5IVJB9JTOT/yYBHm7rE+PJMY="])
-      window.addEventListener("message", receiveMessage, false);
+      window.addEventListener("message", receiveMessage, false)
     }
-  }, 10);
-});
+  }, 10)
+})
 
 
 function sendMessage(method, params) {
@@ -25,19 +25,18 @@ function sendMessage(method, params) {
     method,
     params
   }
-  console.log(extMessage)
+  console.log("From Send Message: ", extMessage)
   window.postMessage(extMessage)
 }
 
 function receiveMessage(event) {
+  console.log("Receive Message: ", event.data)
   switch (event.data.method) {
     case "ae:sdkReady":
         sendMessage("ae:registerProvider", ["mqMprOIp1ehtxUI3IaG5IVJB9JTOT/yYBHm7rE+PJMY="])
         break
     case "ae:registrationComplete":
-        console.log("Registration: ", event.data)
-        sendMessage("ae:walletDetail",
-        ["1KGVZ2AFqAybJkpdKCzP/0W4W/0BQZaDH6en8g7VstQ=", "ak_bobS3qRvWfDxCpmedQYzp3xrK5jVUS4MSto99QrCdySSMjYnd", []])
+        console.log("Registration Complete")
       break
     case "ae:sign":
         console.log("Sign: ", event.data)
