@@ -1,55 +1,37 @@
 import MemoryAccount from '@aeternity/aepp-sdk/es/account/memory'
+import ExtensionProvider from '@aeternity/aepp-sdk/es/provider/extension'
 
 const mySuperSafeAccount = MemoryAccount({
   keypair: {
-    secretKey: "565ea7300f070858838a0bd6c3fe6640f7591c825536ef84126ad1fda02a13804f067606e2f0cb38fed7a1f2a8ca7696330ae2cd8fa9187960ebbd0962f6798a",
-    publicKey: "ak_bobS3qRvWfDxCpmedQYzp3xrK5jVUS4MSto99QrCdySSMjYnd"
+    secretKey: "e6a91d633c77cf5771329d3354b3bcef1bc5e032c43d70b6d35af923ce1eb74dcea7ade470c9f99d9d4e400880a86f1d49bb444b62f11a9ebb64bbcfeb73fef3",
+    publicKey: "ak_2a1j2Mk9YSmC1gioUq4PWRm3bsv887MbuRVwyv4KaUGoR1eiKi"
   }
 })
-
-chrome.extension.sendMessage({}, function (response) {
-  const readyStateCheckInterval = setInterval(function () {
-    if (document.readyState === "complete") {
-      clearInterval(readyStateCheckInterval)
-      sendMessage("ae:registerProvider", ["mqMprOIp1ehtxUI3IaG5IVJB9JTOT/yYBHm7rE+PJMY="])
-      window.addEventListener("message", receiveMessage, false)
-    }
-  }, 10)
-})
-
-
-function sendMessage(method, params) {
-  const extMessage = {
-    "jsonrpc": "2.0",
-    "id": 1,
-    method,
-    params
-  }
-  window.postMessage(extMessage)
-}
-
-function receiveMessage(event) {
-  switch (event.data.method) {
-    case "ae:sdkReady":
-        sendMessage("ae:registerProvider", ["mqMprOIp1ehtxUI3IaG5IVJB9JTOT/yYBHm7rE+PJMY="])
-        break
-    case "ae:registrationComplete":
-        console.log("Registration Complete")
-      break
-    case "ae:sign":
-        console.log("Sign: ", event.data)
-        mySuperSafeAccount.sign(event.data.params[1]).then(signed_tx => {
-        sendMessage("ae:broadcast", ["1KGVZ2AFqAybJkpdKCzP/0W4W/0BQZaDH6en8g7VstQ=", event.data.params[2], signed_tx])
-      }).catch(error => {
-        console.log(error)
-      })
-      break
-  }
-}
-
-
-chrome.runtime.onMessage.addListener( msg => {
-    if(msg.method === "ae:walletDetail") {
-      window.postMessage(msg)
+const promise = ExtensionProvider({
+    accounts: [mySuperSafeAccount],
+    onSdkRegister: (params) => {
+        debugger
     }
 })
+promise.then(provider => {
+
+    chrome.extension.sendMessage({}, function (response) {
+        const readyStateCheckInterval = setInterval(function () {
+            if (document.readyState === "complete") {
+                clearInterval(readyStateCheckInterval)
+                window.addEventListener("message", (msg) => {
+                    provider.processMessage(msg)
+                }, false)
+            }
+        }, 10)
+    })
+
+    chrome.runtime.onMessage.addListener( msg => {
+        if(msg.method === "ae:walletDetail") {
+            debugger
+        }
+    })
+}).catch(err => {
+    console.error(err)
+})
+
