@@ -7,14 +7,14 @@ const mySuperSafeAccount = MemoryAccount({
     publicKey: "ak_2a1j2Mk9YSmC1gioUq4PWRm3bsv887MbuRVwyv4KaUGoR1eiKi"
   }
 })
-const send = chrome.extension.sendMessage
+const send = chrome.runtime.sendMessage
 ExtensionProvider({
     accounts: [mySuperSafeAccount],
     onSdkRegister: (params) => {
-        // TODO Ask for registration (send message to popup)
+        send({ method: 'register', params})
     },
     onSign: () => {
-        // TODO ask popup for confirmation (send message to popup)
+        send({ method: 'sign', params})
     }
 }).then(provider => {
     const readyStateCheckInterval = setInterval(function () {
