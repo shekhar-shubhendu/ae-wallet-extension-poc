@@ -7,25 +7,31 @@ const mySuperSafeAccount = MemoryAccount({
     publicKey: "ak_2a1j2Mk9YSmC1gioUq4PWRm3bsv887MbuRVwyv4KaUGoR1eiKi"
   }
 })
+const send = chrome.extension.sendMessage
 ExtensionProvider({
     accounts: [mySuperSafeAccount],
-    onSdkRegister: (params) => {}
+    onSdkRegister: (params) => {
+        // TODO Ask for registration (send message to popup)
+    },
+    onSign: () => {
+        // TODO ask popup for confirmation (send message to popup)
+    }
 }).then(provider => {
+    const readyStateCheckInterval = setInterval(function () {
+        if (document.readyState === "complete") {
+            clearInterval(readyStateCheckInterval)
+            window.addEventListener("message", (msg) => {
+                provider.processMessage(msg)
+            }, false)
+        }
+    }, 10)
 
-    chrome.extension.sendMessage({}, function (response) {
-        const readyStateCheckInterval = setInterval(function () {
-            if (document.readyState === "complete") {
-                clearInterval(readyStateCheckInterval)
-                window.addEventListener("message", (msg) => {
-                    provider.processMessage(msg)
-                }, false)
-            }
-        }, 10)
-    })
-
-    chrome.runtime.onMessage.addListener( msg => {
+    chrome.runtime.onMessage.addListener(msg => {
         if(msg.method === "ae:walletDetail") {
-            debugger
+            provider.sendAccountDetails(msg.params.sdkId)
+        }
+        if (msg.method === 'ae:sign') {
+            // TODO confirm sign (now auto-sign)
         }
     })
 }).catch(err => {
