@@ -7,14 +7,18 @@ const mySuperSafeAccount = MemoryAccount({
     publicKey: "ak_2a1j2Mk9YSmC1gioUq4PWRm3bsv887MbuRVwyv4KaUGoR1eiKi"
   }
 })
-const send = chrome.runtime.sendMessage
+const send = (data, callback) => chrome.runtime.sendMessage(data, callback)
 ExtensionProvider({
     accounts: [mySuperSafeAccount],
     onSdkRegister: (params) => {
-        send({ method: 'register', params})
+        send({ method: 'register', params}, function (data) {
+            // TODO Send wallet details if approve
+        })
     },
-    onSign: () => {
-        send({ method: 'sign', params})
+    onSign: (params) => {
+        send({ method: 'sign', params}, function (data) {
+            // TODO sign if approved
+        })
     }
 }).then(provider => {
     const readyStateCheckInterval = setInterval(function () {
@@ -26,14 +30,14 @@ ExtensionProvider({
         }
     }, 10)
 
-    chrome.runtime.onMessage.addListener(msg => {
-        if(msg.method === "ae:walletDetail") {
-            provider.sendAccountDetails(msg.params.sdkId)
-        }
-        if (msg.method === 'ae:sign') {
-            // TODO confirm sign (now auto-sign)
-        }
-    })
+    // chrome.runtime.onMessage.addListener(msg => {
+    //     if(msg.method === "register") {
+    //         if (msg.params.allow) provider.sendAccountDetails(msg.params.sdkId)
+    //     }
+    //     if (msg.method === 'ae:sign') {
+    //         // TODO confirm sign (now auto-sign)
+    //     }
+    // })
 }).catch(err => {
     console.error(err)
 })
