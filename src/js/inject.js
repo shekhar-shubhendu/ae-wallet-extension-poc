@@ -7,13 +7,10 @@ const mySuperSafeAccount = MemoryAccount({
     publicKey: "ak_2a1j2Mk9YSmC1gioUq4PWRm3bsv887MbuRVwyv4KaUGoR1eiKi"
   }
 })
-const promise = ExtensionProvider({
+ExtensionProvider({
     accounts: [mySuperSafeAccount],
-    onSdkRegister: (params) => {
-        debugger
-    }
-})
-promise.then(provider => {
+    onSdkRegister: (params) => {}
+}).then(provider => {
 
     chrome.extension.sendMessage({}, function (response) {
         const readyStateCheckInterval = setInterval(function () {
