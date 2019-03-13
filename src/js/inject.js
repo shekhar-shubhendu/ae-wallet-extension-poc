@@ -12,11 +12,13 @@ ExtensionProvider({
     accounts: [mySuperSafeAccount],
     onSdkRegister: (params) => {
         send({ method: 'register', params}, function (data) {
+            debugger
             // TODO Send wallet details if approve
         })
     },
     onSign: (params) => {
         send({ method: 'sign', params}, function (data) {
+            debugger
             // TODO sign if approved
         })
     }
