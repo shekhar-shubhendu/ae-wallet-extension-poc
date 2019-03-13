@@ -22,10 +22,10 @@ document.addEventListener('DOMContentLoaded', function () {
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     switch (message.method) {
         case 'sign':
-            signList[message.sdkId] = { meta: message.params, callback: sendResponse }
+            signList[message.params.sdkId] = { meta: message.params, callback: sendResponse }
             break
         case 'register':
-            sdkList[params.sdkId] = { meta: { url: sender.url, id: sender.id, frameId: sender.frameId } }
+            sdkList[message.params.sdkId] = { meta: { url: sender.url, id: sender.id, frameId: sender.frameId } }
             break
     }
     sendResponse({ msg: true })

@@ -31,15 +31,6 @@ ExtensionProvider({
             }, false)
         }
     }, 10)
-
-    // chrome.runtime.onMessage.addListener(msg => {
-    //     if(msg.method === "register") {
-    //         if (msg.params.allow) provider.sendAccountDetails(msg.params.sdkId)
-    //     }
-    //     if (msg.method === 'ae:sign') {
-    //         // TODO confirm sign (now auto-sign)
-    //     }
-    // })
 }).catch(err => {
     console.error(err)
 })
