@@ -1,34 +1,44 @@
 import "../css/popup.css"
 
-const signList = {}
-const sdkList = {}
+let data
 
-const sendToContent = (method, params) => {
+function sendToContent (method, params) {
     chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
         chrome.tabs.sendMessage(tabs[0].id, {
             jsonrpc: "2.0",
             id: null,
-            method:
+            method,
             params
         })
     })
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('shareWallet').addEventListener('click', () => {
-        // sendWalletDetails()
-    })
-})
+// ASK for data
+sendToContent('getSdkList', {})
+
+// Render
+function render (data) {
+    // @TODO create list with sdks and his transaction with ability to accept/decline signing
+}
+
+function clickSign ({ target, value }) {
+    const [sdkId, tx] = target.id.split['-']
+    signResponse({ value, sdkId, tx })
+}
+
+function signResponse({ value, sdkId, tx }) {
+    sendToContent('txSign', { value, sdkId, tx })
+}
+
+// Handle notification from context script
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     switch (message.method) {
-        case 'sign':
-            signList[message.params.sdkId] = { meta: message.params, callback: sendResponse }
+        case 'data':
+            data = message.params
+            render(message.params)
+            sendResponse(true)
             break
-        case 'register':
-            sdkList[message.params.sdkId] = { meta: { url: sender.url, id: sender.id, frameId: sender.frameId } }
-            break
+        default:
+            sendResponse(true)
     }
-    sendResponse({ msg: true })
 });
-
-//@TODO Need to come up how to receive messages from content script for (showing sdkRegister confirm, and sign confirm)
