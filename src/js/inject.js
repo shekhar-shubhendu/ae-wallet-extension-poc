@@ -56,7 +56,7 @@ ExtensionProvider({
     // Hook for signing transaction
     onSign: function ({ sdkId, tx, txObject, sign }) {
         sendDataToPopup(this.getSdks())
-        if (confirm('Do you want to sing ' + txObject + ' ?')) sign() // SIGN TX
+        if (confirm('Do you want to sign ' + JSON.stringify(txObject) + ' ?')) sign() // SIGN TX
     }
 }).then(provider => {
     // Subscribe from postMessages from page
