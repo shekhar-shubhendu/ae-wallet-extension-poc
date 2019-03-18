@@ -2,6 +2,7 @@
   "name": "My (Not So) Secure AE Wallet",
   "options_page": "options.html",
   "background": {
+    "persistent": false,
     "page": "background.html"
   },
   "browser_action": {
