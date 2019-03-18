@@ -4,11 +4,11 @@ const readyStateCheckInterval = setInterval(function () {
         clearInterval(readyStateCheckInterval)
 
         window.addEventListener("message", ({data}) => {
-            // Handle message from page using sdk
+            // Handle message from page and redirect to background script
             chrome.runtime.sendMessage({ method: 'pageMessage', data })
         }, false)
 
-        // Handle message from background
+        // Handle message from background and redirect to page
         chrome.runtime.onMessage.addListener(({ data }, sender) => {
             window.postMessage(data, '*')
         })

@@ -46,9 +46,9 @@ const accounts = [
 ]
 
 const postToContent = (data) => {
-    chrome.tabs.query({}, function (tabs) { // TODO thisnk about direct comunication
+    chrome.tabs.query({}, function (tabs) { // TODO think about direct direct communication with tab
         const message = { method: 'pageMessage', data };
-        tabs.forEach(({ id }) => chrome.tabs.sendMessage(id, message))
+        tabs.forEach(({ id }) => chrome.tabs.sendMessage(id, message)) // Send message to all tabs
     });
 }
 
